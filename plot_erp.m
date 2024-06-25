@@ -6,11 +6,11 @@
 %   %xlabel(myxlabel);
 % 	xlabel('');
 
-function plot_erps(analysis)
-    % plot_erps performs statistical analysis of ERP data and displays corresponding plots
+function plot_erp(analysis)
+    % plot_erp performs statistical analysis of ERP data and displays corresponding plots
     % with statistical significances and standard error.
     %
-    % Usage: plot_erps(analysis)
+    % Usage: plot_erp(analysis)
     %
     % Input:
     %    analysis - 'target', 'non-target', or 'difference'
