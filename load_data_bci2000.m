@@ -1,8 +1,6 @@
+% Este script es el antiguo 'EEGLAB_loadDAT_script_fullAutomated_dif.m'.
 
 % Hay que pegar en la carpeta del plugin "BCI2000import0.36" el archivo "pop_loadBCI2000_automatedScript.m"
-% Al ejecutar luego este script sólo hay que cargar los .dat por sujeto y
-% condición
-% -------------------
 
 % Automatización total: recorramos dos niveles de subcarpetas dentro de
 % "data_IN_DATscript" (sujeto y condición), cargando TODOS los archivos
@@ -17,27 +15,21 @@ if (exist('data_IN_DATscript', 'dir') == 0 )
 end
 
 tempList = dir('data_IN_DATscript');
-if(length(tempList) <= 2)
+if (length(tempList) <= 2)
     disp('No hay carpetas de sujetos en data_IN_DATscript. Cancelando ejecución.')
     return;
 end
 
-
-
-for i_subject = 3:length(tempList)
-  %  disp( tempList( i_subject ).name);
-    
+for i_subject = 3:length(tempList)    
     tempList2 = dir(['data_IN_DATscript/' tempList( i_subject ).name]);  
-    if(length(tempList2) <= 2)
+    if (length(tempList2) <= 2)
         disp(['No hay carpetas de condiciones en data_IN_DATscript/' tempList( i_subject ).name '. Cancelando ejecución.'])
         return;
     end
     
     for i_condition = 3:length(tempList2)
-       % disp( tempList2( i_condition ).name );
-        
         tempList3 = dir(['data_IN_DATscript/' tempList( i_subject ).name '/' tempList2( i_condition ).name '/*.dat'] );  
-        if(length(tempList3) < 1)
+        if (length(tempList3) < 1)
             disp(['No hay archivos .dat en data_IN_DATscript/' tempList( i_subject ).name '/' tempList2( i_condition ).name '. Cancelando ejecución.'])
             return;
         end
@@ -65,19 +57,11 @@ for i_subject = 3:length(tempList)
 
         [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'gui','off'); 
 
-
-        % EEG=pop_chanedit(EEG, 'lookup','C:\\EEGLAB\\eeglab13_6_5b\\plugins\\dipfit2.3\\standard_BESA\\standard-10-5-cap385.elp');
-        % EEG=pop_chanedit(EEG, 'lookup','plugins\\dipfit2.3\\standard_BESA\\standard-10-5-cap385.elp');
-        
-        EEG=pop_chanedit(EEG, 'lookup','plugins\\dipfit5.4\\standard_BESA\\standard-10-5-cap385.elp');
+        EEG = pop_chanedit(EEG, 'lookup','plugins\\dipfit5.4\\standard_BESA\\standard-10-5-cap385.elp');
         
         [ALLEEG EEG] = eeg_store(ALLEEG, EEG, CURRENTSET);
         
-%         EEG = eeg_checkset( EEG );
-%         EEG = pop_reref( EEG, 1);             % Re-reference to Channel 1 (Fz)
-        
         EEG = eeg_checkset( EEG );
-%         EEG = pop_epoch( EEG, {  'StimulusBegin'  }, [-0.2         0.8], 'newname', 'Imported BCI2000 data set epochs', 'epochinfo', 'yes');
         EEG = pop_epoch( EEG, {  'StimulusBegin'  }, [-0.5         1], 'newname', 'Imported BCI2000 data set epochs', 'epochinfo', 'yes');
 
         [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 1,'gui','off'); 
@@ -94,9 +78,7 @@ for i_subject = 3:length(tempList)
         EEG = pop_selectevent( EEG, 'latency','0<=0','type',{'StimulusType'},'deleteevents','off','deleteepochs','on','invertepochs','on');
         [ALLEEG EEG CURRENTSET_ignorados] = pop_newset(ALLEEG, EEG, CURRENTSET_todos,'savenew',[char(newFileName) '_ignore'],'gui','off'); 
         
-        
-       % [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 6,'gui','off'); 
-       dataSetSize = size(ALLEEG(CURRENTSET_atendidos).data);
+        dataSetSize = size(ALLEEG(CURRENTSET_atendidos).data);
         for channel = 1:dataSetSize(1);
             for time = 1:dataSetSize(2);
                 for stimulus = 1:dataSetSize(3);     % CUIDADO, el número de estímulos difiere entre condiciones, hay que mirar el tamaño del dataset de los target
@@ -104,13 +86,11 @@ for i_subject = 3:length(tempList)
                 end
             end
         end
+        
         [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, CURRENTSET_diferencia,'saveold',[char(newFileName) '_difference'],'gui','off'); 
-
         
         close;
-
     end
-
 end
 
 
