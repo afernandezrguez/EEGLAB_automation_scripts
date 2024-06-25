@@ -1,8 +1,8 @@
-% To use this script, it is required to modify the eeglab's function plotcurve as follow:
-%   Line 304 aprox.
+% To use this script, it is required to modify the eeglab's function '\functions\sigprocfunc\plotcurve.m' as follow.
+%   Line 304 aprox:
 % 	%plot(times, times, 'w'); 
 % 	plot(times, times, 'Color', [1 1 1 0.5]);
-%   Line 315 aprox.
+%   Line 315 aprox:
 %   %xlabel(myxlabel);
 % 	xlabel('');
 
