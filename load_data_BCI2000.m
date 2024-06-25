@@ -1,24 +1,24 @@
 
 % Hay que pegar en la carpeta del plugin "BCI2000import0.36" el archivo "pop_loadBCI2000_automatedScript.m"
-% Al ejecutar luego este script s髄o hay que cargar los .dat por sujeto y
-% condici髇
+% Al ejecutar luego este script s贸lo hay que cargar los .dat por sujeto y
+% condici贸n
 % -------------------
 
-% Automatizaci髇 total: recorramos dos niveles de subcarpetas dentro de
-% "data_IN_DATscript" (sujeto y condici髇), cargando TODOS los archivos
+% Automatizaci贸n total: recorramos dos niveles de subcarpetas dentro de
+% "data_IN_DATscript" (sujeto y condici贸n), cargando TODOS los archivos
 % .dat existentes
 
 % ------------------------------------------------
 clear all;
 
 if (exist('data_IN_DATscript', 'dir') == 0 )
-    disp('No existe la carpeta data_IN_DATscript desde la que cargar los archivos de entrada. Cancelando ejecuci髇.')
+    disp('No existe la carpeta data_IN_DATscript desde la que cargar los archivos de entrada. Cancelando ejecuci贸n.')
     return;
 end
 
 tempList = dir('data_IN_DATscript');
 if(length(tempList) <= 2)
-    disp('No hay carpetas de sujetos en data_IN_DATscript. Cancelando ejecuci髇.')
+    disp('No hay carpetas de sujetos en data_IN_DATscript. Cancelando ejecuci贸n.')
     return;
 end
 
@@ -29,7 +29,7 @@ for i_subject = 3:length(tempList)
     
     tempList2 = dir(['data_IN_DATscript/' tempList( i_subject ).name]);  
     if(length(tempList2) <= 2)
-        disp(['No hay carpetas de condiciones en data_IN_DATscript/' tempList( i_subject ).name '. Cancelando ejecuci髇.'])
+        disp(['No hay carpetas de condiciones en data_IN_DATscript/' tempList( i_subject ).name '. Cancelando ejecuci贸n.'])
         return;
     end
     
@@ -38,7 +38,7 @@ for i_subject = 3:length(tempList)
         
         tempList3 = dir(['data_IN_DATscript/' tempList( i_subject ).name '/' tempList2( i_condition ).name '/*.dat'] );  
         if(length(tempList3) < 1)
-            disp(['No hay archivos .dat en data_IN_DATscript/' tempList( i_subject ).name '/' tempList2( i_condition ).name '. Cancelando ejecuci髇.'])
+            disp(['No hay archivos .dat en data_IN_DATscript/' tempList( i_subject ).name '/' tempList2( i_condition ).name '. Cancelando ejecuci贸n.'])
             return;
         end
         
@@ -99,7 +99,7 @@ for i_subject = 3:length(tempList)
        dataSetSize = size(ALLEEG(CURRENTSET_atendidos).data);
         for channel = 1:dataSetSize(1);
             for time = 1:dataSetSize(2);
-                for stimulus = 1:dataSetSize(3);     % CUIDADO, el n鷐ero de est韒ulos difiere entre condiciones, hay que mirar el tama駉 del dataset de los target
+                for stimulus = 1:dataSetSize(3);     % CUIDADO, el n煤mero de est铆mulos difiere entre condiciones, hay que mirar el tama帽o del dataset de los target
                     ALLEEG(CURRENTSET_diferencia).data(channel,time,stimulus) = ALLEEG(CURRENTSET_atendidos).data(channel,time,stimulus) - mean(ALLEEG(CURRENTSET_ignorados).data(channel,time,:));
                 end
             end
