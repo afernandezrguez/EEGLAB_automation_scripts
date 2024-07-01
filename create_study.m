@@ -100,8 +100,11 @@ function create_study(experiment_code, participant_code)
 
     STUDY = std_selectdesign(STUDY, ALLEEG, 1);
 
-    % Precompute studies
+    % Precompute the study
     [STUDY, ALLEEG] = std_precomp(STUDY, ALLEEG, {}, 'savetrials', 'on', 'interp', 'on', 'recompute', 'on', 'erp', 'on', 'erpparams', {'rmbase', [-200 0]});
+    
+    % Save the study
+    [STUDY, EEG] = pop_savestudy( STUDY, EEG, 'filename', [experiment_code, '.study'],'filepath',[cd, '\studies_eeglab\']);
 
     % Redraw EEGLAB
     eeglab redraw;

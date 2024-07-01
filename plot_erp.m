@@ -1,12 +1,12 @@
 % To use this script, it is required to modify the eeglab's function '\functions\sigprocfunc\plotcurve.m' as follow.
 %   Line 304 aprox:
-% 	%plot(times, times, 'w'); 
-% 	plot(times, times, 'Color', [1 1 1 0.5]);
+%   %plot(times, times, 'w'); 
+%   plot(times, times, 'Color', [1 1 1 0.5]);
 %   Line 315 aprox:
 %   %xlabel(myxlabel);
-% 	xlabel('');
+%   xlabel('');
 
-function plot_erp(analysis)
+function plot_erp(analysis, experiment_code)
     % plot_erp performs statistical analysis of ERP data and displays corresponding plots
     % with statistical significances and standard error.
     %
@@ -17,7 +17,14 @@ function plot_erp(analysis)
 
     % Assume the following global variables are already defined:
     % STUDY, ALLEEG, EEG
-    global STUDY ALLEEG EEG;
+    global STUDY ALLEEG EEG study_name;
+    
+    % Load the created study if STUDY is not already loaded
+    if isempty(STUDY)
+        study_name = [experiment_code, '.study'];
+        [STUDY, ALLEEG] = pop_loadstudy('filename', study_name, 'filepath', 'studies_eeglab');
+        EEG = ALLEEG;
+    end
 
     % Map the analyses to their corresponding numerical values
     switch analysis
@@ -72,9 +79,14 @@ function plot_erp(analysis)
         title(channel_label);
         set(gca, 'xtick', []);
         
+%         ax = gca;
+%         
+%         ax.FontSize = 12;
+%         ax.LineWidth = 1.5;
+        
         % Remove x and y axis titles
         if i == 5
-            xlabel('Time (ms)', 'Position', [300 -14 0]);     
+            xlabel('Time (ms)', 'Position', [300 -15 0]);     
             ylabel('Amplitude (\muV)');
         else
             xlabel('');
@@ -84,4 +96,22 @@ function plot_erp(analysis)
 
     % Adjust the overall figure
     set(bigFigure, 'Name', 'Overall ERP Plots', 'NumberTitle', 'off');
+    
+    
+    % Modify the properties of all axes in the final figure
+    allAxes = findall(bigFigure, 'type', 'axes');
+    for ax = allAxes'
+        % Change font size
+        ax.FontSize = 12;  % Cambia el tamaño de la fuente aquí
+        % Change line width for all lines in the current axes
+        lines = findall(ax, 'Type', 'Line');
+        for line = lines'
+            line.LineWidth = 1.5;  % Cambia el grosor de las líneas aquí
+        end
+    end
+    
+    % Optionally, set the paper size for saving the figure (e.g., to a PDF)
+    set(bigFigure,'units','normalized','outerposition',[0, 0, 0.5, 0.5]);
+    saveas(bigFigure, [analysis, '.png']);
+ 
 end
